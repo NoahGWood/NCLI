@@ -91,7 +91,7 @@ Simply include the `NCLI.h` header in your project and link with C++17 or higher
 
    Providing a command with invalid flags or options will list the options and flags for that command (and, helpfully, show any flags/options that were set):
 
-   ![bpred_help](/home/noah/Desktop/Projects/NCLI/imgs/bpred_help.png)
+   ![bpred_help](./imgs/bpred_help.png)
 
    
 
@@ -113,7 +113,7 @@ Simply include the `NCLI.h` header in your project and link with C++17 or higher
    std::cout << std::endl;
    ```
 
-   ![checkboxes](/home/noah/Desktop/Projects/NCLI/imgs/checkboxes.png)
+   ![checkboxes](./imgs/checkboxes.png)
 
    ![example_list](./imgs/example_list.png)
 
