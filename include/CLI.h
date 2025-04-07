@@ -78,7 +78,6 @@ namespace NCLI
             void parse(int argc, char* argv[]) {
                 if(argc == 1 || std::string(argv[1]) == "--help" || std::string(argv[1]) == "-h"){
                     display_help();
-                    
                 }
                 for(int i=1; i<argc; ++i){
                     std::string arg = argv[i];
@@ -86,8 +85,13 @@ namespace NCLI
                     if(arg[0] == '-'){
                         if(arg[1] == '-'){ // Long option (e.g. --name)
                             std::string option_name = arg.substr(2);
-                            if(i+1 < argc && argv[i+1][0] != '-'){
-                                set_option(option_name, argv[++i]);
+                            std::vector<std::string> values;
+                            while(i+1 < argc && argv[i+1][0] != '-')
+                            {
+                                values.push_back(argv[++i]);
+                            }
+                            if(!values.empty()){
+                                set_option_vector(option_name, values);
                             } else {
                                 std::cerr << "Error: Missing value for option " << option_name << std::endl;
                                 exit(1);
@@ -167,6 +171,43 @@ namespace NCLI
                     Command* current = get_command(m_CurrentCommand);
                     if(current != nullptr){
                         if(current->set_option(name, value)){
+                            return;
+                        } else {
+                            std::cout << Color::red(Color::bold("Unknown option: ")) << name << "\n";
+                            current->display_help();
+                            exit(0);
+                        }
+                    }
+                }
+                // Nothing left to check, throw an error and show help
+                throw std::invalid_argument("Unknown option: " + name);
+            }
+
+            void set_option_vector(const std::string& name, const std::vector<std::string>& values)
+            {
+                // First check if global options are set
+                for(auto& option : m_Options){
+                    if(option.Name == name){
+                        // Check if option value is already set, if so make it first
+                        if(!option.Value.empty()){
+                            if (std::find(option.Values.begin(), option.Values.end(), option.Value) != option.Values.end())
+                            {
+                                option.Values.insert(option.Values.begin(), option.Value);
+                            }
+                        }
+                        option.Set = true;
+                        for(auto value : values)
+                        {
+                            option.Values.push_back(value);
+                        }
+                        return;
+                    }
+                }
+                // Then check if options are set on current command
+                if(!m_CurrentCommand.empty()){
+                    Command* current = get_command(m_CurrentCommand);
+                    if(current != nullptr){
+                        if(current->set_option_vector(name, values)){
                             return;
                         } else {
                             std::cout << Color::red(Color::bold("Unknown option: ")) << name << "\n";

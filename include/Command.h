@@ -23,6 +23,7 @@ namespace NCLI
         std::string Name;
         std::string Help;
         std::string Value;
+        std::vector<std::string> Values;
         bool Set=false;
         Option() = default;
         Option(const std::string& name)
@@ -95,6 +96,29 @@ namespace NCLI
             for(auto& option : Options){
                 if(option.Name == name){
                     option.Value = value;
+                    option.Set = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool set_option_vector(const std::string& name, const std::vector<std::string> values)
+        {
+            for(auto& option : Options) {
+                if(option.Name == name) {
+                    if(!option.Value.empty()){
+                        if (std::find(option.Values.begin(), option.Values.end(), option.Value) != option.Values.end())
+                        {
+                            option.Values.insert(option.Values.begin(), option.Value);
+                        }
+                    } else if(!values.empty()) {
+                        option.Value = values.front();
+                    }
+                    for(const auto& value : values)
+                    {
+                        option.Values.push_back(value);
+                    }
                     option.Set = true;
                     return true;
                 }
