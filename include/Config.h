@@ -4,6 +4,6 @@ namespace NCLI
 {
     namespace CFG
     {
-        static inline std::string promptChar = "> ";
+        inline static std::string promptChar = "> ";
     } // namespace CFG
 } // namespace NCLI

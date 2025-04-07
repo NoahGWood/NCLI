@@ -18,7 +18,7 @@ namespace NCLI
     {
         std::cout << "\033[H\033[J"; // Clear the screen
     }
-    inline std::string prompt(const std::string &message)
+    inline static std::string prompt(const std::string &message)
     {
         std::cout << NCLI::Color::cyan(NCLI::CFG::promptChar) << NCLI::Color::bold(message) << ": ";
         std::string input;
@@ -49,15 +49,15 @@ namespace NCLI
             return ch;
     }
 
-    static void hide_cursor(){
+    inline static void hide_cursor(){
         std::cout << "\033[?25l";  // Hide the cursor
     }
 
-    static void show_cursor(){
+    inline static void show_cursor(){
         std::cout << "\033[?25h";  // Show the cursor
     }
 
-    static std::string list(const std::string &message, const std::vector<std::string> &options)
+    inline static std::string list(const std::string &message, const std::vector<std::string> &options)
     {
         int selected = 0;
         char key = 0;
@@ -103,7 +103,7 @@ namespace NCLI
         }
     }
 
-    static std::set<std::string> checkbox(const std::string &message, const std::vector<std::string> &options)
+    inline static std::set<std::string> checkbox(const std::string &message, const std::vector<std::string> &options)
     {
         hide_cursor();
         std::set<std::string> selected;
